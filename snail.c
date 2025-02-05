@@ -9,6 +9,9 @@
 #define HEIGHT 20
 #define WIDTH 40
 
+//DEFINING ESCAPE KEY
+#define KEY_ESCAPE  0x001b
+
 //CREATING STUCTURE TERMIOS
 struct termios original, changed;
 
