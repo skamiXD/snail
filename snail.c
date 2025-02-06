@@ -9,8 +9,17 @@
 #define HEIGHT 20
 #define WIDTH 40
 
+
 //DEFINING ESCAPE KEY
 #define KEY_ESCAPE  0x001b
+
+int apple_x = 20, apple_y = 5;
+
+int tailLen;
+
+char direction;
+
+int snail_X = WIDTH/2, snail_Y = HEIGHT/2;
 
 //CREATING STUCTURE TERMIOS
 struct termios original, changed;
@@ -62,12 +71,37 @@ char getKey() {
 	return c;
 }
 
+void logic(char key) {
+	switch(key) {
+		case('A'):
+			snail_Y--;
+			break;
+		case('B'):
+			snail_Y++;
+			break;
+		case('D'):
+			snail_X--;
+			break;
+		case('C'):
+			snail_X++;
+			break;
+	}
+}
+
+void catchAplle() {
+	//DEFINING RANDOM X AND Y TO SPAWN FRUIT
+	apple_x = rand() % (WIDTH - 1) + 1;
+	apple_y = rand() % (HEIGHT - 1) + 1;
+	tailLen();
+}
+
 //FUNCTION TO CREATE MAP OF GAME
 void createUI () {
-	//DEFINING RANDOM X AND Y TO SPAWN FRUIT
-	int apple_x = rand() % (WIDTH - 1) + 1;
-	int apple_y = rand() % (HEIGHT - 1) + 1;
-	
+	if(snail_Y == apple_y && snail_X == apple_x)
+	{
+		catchApple();
+	}
+
 	//FOR A TOP WALL
 	for (int i = 0; i <= WIDTH; i++)
 	{
@@ -82,18 +116,20 @@ void createUI () {
 			if (j == apple_x && i == apple_y)
 			{
 				printf("*");
+			}else if(i == snail_Y && j == snail_X) {
+				printf("O");
 			}else {
-
-			printf(" ");
+				printf(" ");
 			}
 		}
 		printf("#\n");
 	}
-
+	
 	for (int i = 0; i <= WIDTH; i++)
 	{
 		printf("-");
 	}
+	printf("\n");
 }
 
 //MAIN FUNCTION
@@ -102,28 +138,17 @@ int main() {
 	system("clear");
 	//CALLING SET TERMIOS FUNCTION
 	setTermios();
-	int snake_health = 3;
-	bool Horizontal = true;
-	//CALLING FUNCTION TO CREATE UI
-	createUI();
 	
+	char key;
+
 	//CALLING GET ARROW KEYS FUNCTION IN WHILE LOOP TO LISTEN TO IT EVERY SECOND
 	while (1)
-	{
-		getKey();
-	}
-
-	//FUNCTIN TO CREATE SNAKE (PROBABLY WILL CAHNGE)
-	for (int i = 0; i <= snake_health; i++)
-	{
-		if (i == snake_health)
-		{
-			printf(">");
-		}
-		else
-		{
-			printf("=");
-		}
+	{	
+		logic(getchar());
+		system("clear");
+		//CALLING FUNCTION TO CREATE UI
+		createUI();
+		//sleep(1);
 	}
 
 	//SETTING TERMIOS TO ORIGINAL SETTINGS OR FLAGS
