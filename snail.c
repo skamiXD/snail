@@ -31,7 +31,7 @@ void setTermios(){
 }
 
 //FUNCTION TO GET ARROW KEYS
-void getKey() {
+char getKey() {
 	char c;
 	c = getchar();
 	if (c == KEY_ESCAPE)
@@ -54,28 +54,19 @@ void getKey() {
 					c = 'D';
 					break;
 			}
-			printf("You clicked: %c\n", c);
+		} else
+		{
+			c = ' ';
 		}
 	}
-}
-
-//FUNCTION TO SPAWS APPLE
-void spawnApple();
-
-//FUNCTION TO SETUP GAME
-void setup () {
-	spawnApple();
-}
-
-//APPLE FUNCTION
-void spawnApple () {
-	int x = rand() % (WIDTH - 1) + 1;
-	int y = rand() % (HEIGHT - 1)  + 1;
+	return c;
 }
 
 //FUNCTION TO CREATE MAP OF GAME
 void createUI () {
-	int matrix[HEIGHT][WIDTH];
+	//DEFINING RANDOM X AND Y TO SPAWN FRUIT
+	int apple_x = rand() % (WIDTH - 1) + 1;
+	int apple_y = rand() % (HEIGHT - 1) + 1;
 	
 	//FOR A TOP WALL
 	for (int i = 0; i <= WIDTH; i++)
@@ -88,7 +79,13 @@ void createUI () {
 		printf("#");
 		for (int j = 0; j <= WIDTH - 2; j++)
 		{
+			if (j == apple_x && i == apple_y)
+			{
+				printf("*");
+			}else {
+
 			printf(" ");
+			}
 		}
 		printf("#\n");
 	}
@@ -105,13 +102,10 @@ int main() {
 	system("clear");
 	//CALLING SET TERMIOS FUNCTION
 	setTermios();
-
 	int snake_health = 3;
 	bool Horizontal = true;
 	//CALLING FUNCTION TO CREATE UI
 	createUI();
-
-	setup();
 	
 	//CALLING GET ARROW KEYS FUNCTION IN WHILE LOOP TO LISTEN TO IT EVERY SECOND
 	while (1)
