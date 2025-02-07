@@ -88,15 +88,19 @@ void logic(char key) {
 	}
 }
 
-void catchAplle() {
+void catchApple() {
 	//DEFINING RANDOM X AND Y TO SPAWN FRUIT
-	apple_x = rand() % (WIDTH - 1) + 1;
-	apple_y = rand() % (HEIGHT - 1) + 1;
-	tailLen();
+	apple_x = rand() % (WIDTH - 1);
+	apple_y = rand() % (HEIGHT - 1);
+	if (apple_x == 0 || apple_y == 0){
+		catchApple();
+	}
+	tailLen++;
 }
 
 //FUNCTION TO CREATE MAP OF GAME
 void createUI () {
+	//SPAWNING APPLE IN DIFFRENT LOCATION WHEN SNAI TOUCHES IT
 	if(snail_Y == apple_y && snail_X == apple_x)
 	{
 		catchApple();
@@ -144,12 +148,18 @@ int main() {
 	//CALLING GET ARROW KEYS FUNCTION IN WHILE LOOP TO LISTEN TO IT EVERY SECOND
 	while (1)
 	{	
-		logic(getchar());
 		system("clear");
 		//CALLING FUNCTION TO CREATE UI
 		createUI();
+		//ENING GAME WHEN COLLISION WITH WALLS HAPPEN
+		if(snail_X == -1 || snail_X == WIDTH - 1 || snail_Y == -1 || snail_Y == HEIGHT + 1)
+		{
+			printf("game over");
+			break;
+		}
 		//sleep(1);
-	}
+		logic(getchar());
+	} 
 
 	//SETTING TERMIOS TO ORIGINAL SETTINGS OR FLAGS
 	tcsetattr(STDIN_FILENO, TCSANOW, &original);
