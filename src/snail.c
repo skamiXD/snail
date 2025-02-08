@@ -15,7 +15,9 @@
 
 int apple_x = 20, apple_y = 5;
 
-int tailLen;
+int tailLen = 0;
+
+int tailX[100], tailY[100];
 
 char direction;
 
@@ -71,20 +73,47 @@ char getKey() {
 	return c;
 }
 
+void catchApple();
+
+void addTale();
+
 void logic(char key) {
 	switch(key) {
 		case('A'):
 			snail_Y--;
+			addTale(snail_X, snail_Y + 1);
 			break;
 		case('B'):
 			snail_Y++;
+			addTale(snail_X, snail_Y - 1);
 			break;
 		case('D'):
 			snail_X--;
+			addTale(snail_X + 1, snail_Y);
 			break;
 		case('C'):
 			snail_X++;
+			addTale(snail_X - 1, snail_Y);
 			break;
+	}
+
+	if(snail_Y == apple_y && snail_X == apple_x)
+	{
+		catchApple();
+	}
+
+}
+
+void addTale(int x, int y) {
+	if (apple_x == snail_X && apple_y == snail_Y) {
+		tailX[tailLen] = x;
+		tailY[tailLen] = y;
+		tailLen++;
+	}
+	if(tailLen != 0) {
+		//for(int i = tailLen; i = 0; i--) {
+		//	printf("%d", tailX[i]);
+		//}
 	}
 }
 
@@ -95,34 +124,51 @@ void catchApple() {
 	if (apple_x == 0 || apple_y == 0){
 		catchApple();
 	}
-	tailLen++;
+	for(int i = 0; i <= tailLen; i++)
+	{
+		if(tailX[i] == apple_x && tailY[i] == apple_y) {
+			catchApple();
+			break;
+		}
+	}
 }
 
 //FUNCTION TO CREATE MAP OF GAME
 void createUI () {
 	//SPAWNING APPLE IN DIFFRENT LOCATION WHEN SNAI TOUCHES IT
-	if(snail_Y == apple_y && snail_X == apple_x)
-	{
-		catchApple();
-	}
+	int oneTimeX = 50;
+	int oneTimeY = 50;
 
 	//FOR A TOP WALL
 	for (int i = 0; i <= WIDTH; i++)
 	{
 		printf("-");
 	}
+
 	printf("\n");
+
 	for (int i = 0; i <= HEIGHT; i++)
 	{
 		printf("#");
 		for (int j = 0; j <= WIDTH - 2; j++)
-		{
-			if (j == apple_x && i == apple_y)
+		{	
+			for(int p = 0; p < tailLen; p++)
 			{
+				if(tailLen == 0){
+					break;
+				}else if (tailX[p] == j && tailY[p] == i) {	
+					oneTimeX = tailX[p];
+					oneTimeY = tailY[p];
+				}
+			}
+			if (j == apple_x && i == apple_y) {
 				printf("*");
 			}else if(i == snail_Y && j == snail_X) {
 				printf("O");
-			}else {
+			}else if(oneTimeX == j && oneTimeY == i) {	
+				//printf("%d %d", j, i);
+				printf("o");
+			}else  {
 				printf(" ");
 			}
 		}
@@ -134,6 +180,8 @@ void createUI () {
 		printf("-");
 	}
 	printf("\n");
+	oneTimeX = 50;
+	oneTimeY = 50;
 }
 
 //MAIN FUNCTION
