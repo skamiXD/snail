@@ -205,10 +205,6 @@ int main() {
 	//CALLING SET TERMIOS FUNCTION
 	setTermios();
 	
-	char key;
-	
-
-
 	//CALLING GET ARROW KEYS FUNCTION IN WHILE LOOP TO LISTEN TO IT EVERY SECOND
 	while (1)
 	{	
