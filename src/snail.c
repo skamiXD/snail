@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+#include <pthread.h>
 
 //SNAKE GAME
 #define HEIGHT 20
@@ -14,6 +15,8 @@
 #define KEY_ESCAPE  0x001b
 
 int apple_x = 20, apple_y = 5;
+
+char key;
 
 int tailLen = 0;
 
@@ -44,7 +47,9 @@ void setTermios(){
 }
 
 //FUNCTION TO GET ARROW KEYS
-char getKey() {
+void* getKey(void* arg) {
+	while (1)
+	{
 	char c;
 	c = getchar();
 	if (c == KEY_ESCAPE)
@@ -72,14 +77,15 @@ char getKey() {
 			c = ' ';
 		}
 	}
-	return c;
+	key = c;
+	}
 }
 
 void catchApple();
 
 void addTale();
 
-void logic(char key) {
+void logic() {
 	switch(key) {
 		case('A'):
 			snail_Y--;
@@ -200,10 +206,14 @@ void createUI () {
 
 //MAIN FUNCTION
 int main() {
-	//CLEARING TERMINAL
+	pthread_t thread_id;
+
+	//CLEARING TMINAL
 	system("clear");
 	//CALLING SET TERMIOS FUNCTION
 	setTermios();
+
+	pthread_create(&thread_id, NULL, getKey, NULL);
 	
 	//CALLING GET ARROW KEYS FUNCTION IN WHILE LOOP TO LISTEN TO IT EVERY SECOND
 	while (1)
@@ -217,11 +227,11 @@ int main() {
 			printf("game over");
 			break;
 		}
-		//sleep(1);
-		logic(getchar());
+		logic();
 		if (tailCol == true) {
 			break;
 		}
+		usleep(100000);
 	} 
 
 	//SETTING TERMIOS TO ORIGINAL SETTINGS OR FLAGS
