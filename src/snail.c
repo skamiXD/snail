@@ -21,6 +21,8 @@ int tailX[100], tailY[100];
 
 char direction;
 
+bool tailCol = false;
+
 int snail_X = WIDTH/2, snail_Y = HEIGHT/2;
 
 //CREATING STUCTURE TERMIOS
@@ -81,19 +83,19 @@ void logic(char key) {
 	switch(key) {
 		case('A'):
 			snail_Y--;
-			addTale(snail_X, snail_Y + 1);
+			addTale(snail_X, snail_Y + 1, tailX[tailLen - 1], tailY[tailLen - 1] - 1);
 			break;
 		case('B'):
 			snail_Y++;
-			addTale(snail_X, snail_Y - 1);
+			addTale(snail_X, snail_Y - 1, tailX[tailLen - 1], tailY[tailLen - 1] + 1);
 			break;
 		case('D'):
 			snail_X--;
-			addTale(snail_X + 1, snail_Y);
+			addTale(snail_X + 1, snail_Y, tailX[tailLen - 1] - 1, tailY[tailLen - 1]);
 			break;
 		case('C'):
 			snail_X++;
-			addTale(snail_X - 1, snail_Y);
+			addTale(snail_X - 1, snail_Y, tailX[tailLen - 1] + 1, tailY[tailLen - 1]);
 			break;
 	}
 
@@ -102,18 +104,30 @@ void logic(char key) {
 		catchApple();
 	}
 
+	for (int i = 0; i < tailLen; i++)
+	{
+		if(snail_X == tailX[i] && snail_Y == tailY[i]) {
+			tailCol = true;
+		}
+	}
 }
 
 void addTale(int x, int y) {
 	if (apple_x == snail_X && apple_y == snail_Y) {
-		tailX[tailLen] = x;
-		tailY[tailLen] = y;
 		tailLen++;
 	}
-	if(tailLen != 0) {
-		//for(int i = tailLen; i = 0; i--) {
-		//	printf("%d", tailX[i]);
-		//}
+
+	for (int i = tailLen - 1; i >= 0; i--)
+	{
+		if(i == 0)
+		{
+			tailX[i] = x;
+			tailY[i] = y;
+		}else 
+		{
+			tailX[i] = tailX[i - 1];
+			tailY[i] = tailY[i - 1];
+		}
 	}
 }
 
@@ -192,6 +206,8 @@ int main() {
 	setTermios();
 	
 	char key;
+	
+
 
 	//CALLING GET ARROW KEYS FUNCTION IN WHILE LOOP TO LISTEN TO IT EVERY SECOND
 	while (1)
@@ -207,6 +223,9 @@ int main() {
 		}
 		//sleep(1);
 		logic(getchar());
+		if (tailCol == true) {
+			break;
+		}
 	} 
 
 	//SETTING TERMIOS TO ORIGINAL SETTINGS OR FLAGS
