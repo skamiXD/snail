@@ -50,6 +50,7 @@ void setTermios(){
 void* getKey(void* arg) {
 	while (1)
 	{
+	usleep(100000);
 	char c;
 	c = getchar();
 	if (c == KEY_ESCAPE)
