@@ -60,15 +60,35 @@ void* getKey(void* arg) {
 			switch(getchar())
 			{
 				case('A'):
+					if (key == 'B')
+					{
+						c = 'B';
+						break;
+					}
 					c = 'A';
 					break;
 				case('B'):
+					if (key == 'A')
+					{
+						c = 'A';
+						break;
+					}
 					c = 'B';
 					break;
 				case('C'):
+					if (key == 'D')
+					{
+						c = 'D';
+						break;
+					}
 					c = 'C';
 					break;
 				case('D'):
+					if (key == 'C')
+					{
+						c = 'C';
+						break;
+					}
 					c = 'D';
 					break;
 			}
