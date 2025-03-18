@@ -249,7 +249,8 @@ int main() {
 			break;
 		}
 		logic();
-		if (tailCol == true) {
+		if(tailCol == true) {
+			printf("game over\n");
 			break;
 		}
 		usleep(100000);
